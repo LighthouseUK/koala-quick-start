@@ -1,0 +1,27 @@
+{% extends base_layout %}
+
+{% block content %}
+    {% from "foundation_macros.html" import foundation_form, foundation_field, foundation_form_footer %}
+
+    <div class="callout panel">
+        {% set continue_kwargs = {} %}
+        {% if request.GET['continue_url'] %}
+            {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+        {% endif %}
+
+        <form action="{{ form.action_url }}" method="post">
+            {{ foundation_field(form.csrf_token) }}
+            {{ foundation_field(form.uid) }}
+            <fieldset class="fieldset">
+                <legend>Delivery Details</legend>
+                {{ foundation_field(form.schedule_ref) }}
+                {{ foundation_field(form.schedule_date) }}
+                {{ foundation_field(form.withdrawn) }}
+                {{ foundation_field(form.delivery_status) }}
+                {{ foundation_field(form.delivery_notes) }}
+            </fieldset>
+            {{ foundation_form_footer(submit_text='Update Entry', cancel_text='Back to Entry Overview', cancel_uri=uri_for('component.admin.entries.read.ui', uid=request.GET['uid'], **continue_kwargs)) }}
+        </form>
+    </div>
+
+{% endblock content %}

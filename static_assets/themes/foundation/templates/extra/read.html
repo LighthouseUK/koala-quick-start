@@ -1,0 +1,43 @@
+{% extends base_layout %}
+{% from "macros.html" import foundation_form, foundation_footer_nav %}
+
+{% block content %}
+
+<div class="callout panel">
+    <h2 class="text-center">{% block title %}{{ route_title if route_title is defined }}{% endblock title %}</h2>
+    {% if 'uid' in read_properties %}
+    <div class="row">
+        <div class="small-9 columns">
+            <div class="row">
+                <div class="small-5 columns">
+                    <label for="right-label" class="right inline">UID</label>
+                </div>
+                <div class="small-7 columns">
+                    <input type="text" id="right-label" disabled value="{{ resource_object.uid }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% for key in read_properties %}
+        {% if key != 'uid' %}
+        <div class="row">
+            <div class="small-9 columns">
+                <div class="row">
+                    <div class="small-5 columns">
+                        <label for="right-label" class="right inline">{{ resource_object._properties[key].title }}</label>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" id="right-label" disabled value="{{ resource_object[key] or '' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+    {% set nav_kwargs = {} %}
+            {{ '' if nav_kwargs.update({'cancel_uri': request.GET.get('continue_url', '')}) }}
+    {{ foundation_footer_nav(**nav_kwargs) }}
+</div>
+
+{% endblock content %}

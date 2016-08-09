@@ -1,0 +1,31 @@
+{% macro example_template(email_name) -%}
+    <html>
+    <head>
+        <title></title>
+    </head>
+    <body style="margin:0px;">
+        <table bgcolor="e4e4e4" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                    <table align="center" bgcolor="ffffff" cellpadding="0" cellspacing="10" style="font-family:Arial,Helvetica;color:#666666" width="600">
+                        <tbody>
+                            <tr bgcolor="#FAFAFA">
+                                <td>
+                                <p style="text-align:center"><img alt="" height="102" src="" width="102" /></p>
+
+                                <p style="text-align: center;"><span style="color:#000000;"><span style="font-size: 20px; text-align: center;">{{ email_name }}</span></span></p>
+
+                                <p>&nbsp;</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
+
+{%- endmacro %}

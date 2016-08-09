@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#ffc40d">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <link href="{{ main_css }}" rel="stylesheet" />
+{#	<script src="{{ js_url }}app{{js_ext}}"></script>#}
+
+	<title>{% block page_header_title %}{{ app_info.title }}{{ ' | ' + gettext(route_title) if route_title else '' }}{% endblock %}</title>
+
+</head>
+<body>
+    {% block topbar %}
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <ul class="menu">
+                <li class="menu-text"><a href='{{ uri_for(home_route) }}'>{{ app_info.title }}</a></li>
+            </ul>
+        </div>
+        {% if user is defined %}
+        <div class="top-bar-right">
+            <ul class="menu">
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn">&#9660;</button>
+                        <div class="dropdown-content right">
+                            {% if logout_uri is defined %}
+                            <a href="{{ uri_for(logout_uri) }}" aria-label="Logout of MyGuild">Logout</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+    {% endblock topbar %}
+
+    {% block body %}
+    <div class="expanded row">
+        <div class="medium-12 columns">
+            {% block page %}
+                <div class="page">
+                    {% block menu %}
+                        <ul class="menu">
+                        </ul>
+                        <hr>
+                    {% endblock menu %}
+                    {% if status_code and status_message %}
+                    <div data-alert class="callout small {{ status_message[1] }}">
+                        {{ status_message[0] }}
+                    </div>
+                    {% endif %}
+                    {% block content %}
+                        <div class="callout panel">
+                            <h2>{% block title %}{{ route_title if route_title is defined }}{% endblock title %}</h2>
+                            <p>Here is some content. You can do pretty much watever you like here</p>
+                        </div>
+                    {% endblock content %}
+                </div>
+            {% endblock page %}
+        </div>
+    </div>
+    {% endblock body %}
+
+
+    {% block footer_scripts %}
+    {% endblock footer_scripts %}
+</body>
+</html>

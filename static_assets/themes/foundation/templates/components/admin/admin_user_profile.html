@@ -1,0 +1,14 @@
+{% extends base_layout %}
+
+{% block content %}
+    {% from "foundation_macros.html" import foundation_form %}
+
+    <div class="callout panel">
+        {% set continue_kwargs = {} %}
+        {% if request.GET['continue_url'] %}
+            {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+        {% endif %}
+        {{ foundation_form(form=form, submit_text='Save Changes', cancel_text='Back to User Overview', cancel_uri=uri_for('component.admin.users.read.ui', uid=request.GET['uid'], **continue_kwargs)) }}
+    </div>
+
+{% endblock content %}

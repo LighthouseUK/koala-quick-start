@@ -1,0 +1,124 @@
+@charset 'utf-8';
+
+@import 'settings';
+@import 'foundation';
+//@import 'motion-ui';
+
+@include foundation-global-styles;
+@include foundation-grid;
+// @include foundation-flex-grid;
+@include foundation-typography;
+@include foundation-button;
+@include foundation-forms;
+// @include foundation-range-input;
+// @include foundation-accordion;
+// @include foundation-accordion-menu;
+@include foundation-badge;
+@include foundation-breadcrumbs;
+@include foundation-button-group;
+@include foundation-callout;
+@include foundation-close-button;
+@include foundation-menu;
+@include foundation-menu-icon;
+// @include foundation-drilldown-menu;
+// @include foundation-dropdown;
+// @include foundation-dropdown-menu;
+// @include foundation-flex-video;
+@include foundation-label;
+// @include foundation-media-object;
+// @include foundation-off-canvas;
+// @include foundation-orbit;
+@include foundation-pagination;
+// @include foundation-progress-bar;
+// @include foundation-progress-element;
+// @include foundation-meter-element;
+// @include foundation-slider;
+// @include foundation-sticky;
+// @include foundation-reveal;
+@include foundation-switch;
+@include foundation-table;
+// @include foundation-tabs;
+// @include foundation-thumbnail;
+@include foundation-title-bar;
+// @include foundation-tooltip;
+@include foundation-top-bar;
+@include foundation-visibility-classes;
+@include foundation-float-classes;
+// @include foundation-flex-classes;
+
+// @include motion-ui-transitions;
+// @include motion-ui-animations;
+
+$font-path: "../fonts/foundation-icons/foundation-icons";
+@font-face {
+  font-family: "foundation-icons";
+  src: url("#{$font-path}.eot");
+  src: url("#{$font-path}.eot?#iefix") format("embedded-opentype"),
+       url("#{$font-path}.woff") format("woff"),
+       url("#{$font-path}.ttf") format("truetype"),
+       url("#{$font-path}.svg#fontcustom") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import "../fonts/foundation-icons/foundation-icons.css";
+
+// Styling for a CSS Dropdown Menu from W3Schools
+.dropbtn {
+    //background-color: #4CAF50;
+    color: $primary-color;
+    padding: rem-calc(12);
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+.dropbtn.dark {
+    //background-color: #4CAF50;
+    color: $dark-gray;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: $white;
+    min-width: rem-calc(160);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content.right{
+    right: 0;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    //color: $primary-color;
+    padding: rem-calc(12, 16);
+    text-decoration: none;
+    display: block;
+}
+//.dropdown-content.dark a {
+//    color: $gffdark;
+//}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: $medium-gray; color: $white;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: $dark-gray;
+    color: $white;
+}

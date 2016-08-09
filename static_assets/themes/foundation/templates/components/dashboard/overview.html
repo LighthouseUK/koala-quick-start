@@ -1,0 +1,13 @@
+{% extends base_layout %}
+
+{% block content %}
+
+    <div class="callout panel">
+        <h2 class="text-center">{% block title %}{{ route_title if route_title is defined }}{% endblock title %}</h2>
+        <p>This page will eventually give an overview of your user account and links to various settings.</p>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}

@@ -1,0 +1,27 @@
+{% extends base_layout %}
+
+{% block content %}
+    {% from "foundation_macros.html" import foundation_form, foundation_field, foundation_switch_field, foundation_form_footer %}
+    {% set status_classes = {'WITHDRAWN': 'secondary', 'EXPECTED': 'warning', 'RECALLED': 'alert', 'DELIVERED': 'success', 'JUDGED': 'success'} %}
+    {% set storage_map = {'F': 'Frozen', 'C': 'Chilled', 'A': 'Ambient'} %}
+    <div class="callout panel">
+        <h2>Entry {{ entry.entry_ref }}{{ ' (From: ' ~ request.GET['group_name'] ~ ')' if request.GET['group_name'] else '' }} <span class="label {{ status_classes.get(entry.status, '') }}">{{ entry.status }}</span></h2>
+        <ul class="no-bullet">
+            <li>Name: {{ entry.entry_name }}</li>
+            <li>Storage: {{ storage_map.get(entry.storage, '')}}</li>
+            <li>Description: {{ entry.description }}</li>
+        </ul>
+        <hr>
+        <form action="{{ form.action_url }}" method="post">
+            {{ foundation_field(form.csrf_token) }}
+            {{ foundation_field(form.uid) }}
+            <fieldset class="fieldset">
+                <legend>Delivery Details</legend>
+                {{ foundation_switch_field(form.delivered, active_text='Yes', inactive_text='No') }}
+                {{ foundation_field(form.delivery_notes) }}
+            </fieldset>
+            {{ foundation_form_footer(submit_text='Update Delivery Status', cancel_text='Cancel', cancel_uri=request.GET['continue_url']) }}
+        </form>
+    </div>
+
+{% endblock content %}

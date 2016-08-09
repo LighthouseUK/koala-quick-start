@@ -1,0 +1,42 @@
+{% extends base_layout %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-span-12">
+            <div class="section">
+                <h2 class="heading">Upload File Test</h2>
+
+                <div class="action-panel">
+                    <form id="form_file_upload_test" action="{{ upload_url }}" method="post"
+                          enctype="multipart/form-data">
+                        <div class="action-panel">
+                            {{ form.csrf_token }}
+                            {% if form.csrf_token.errors %}
+                                <small class="error">You have submitted an invalid CSRF token</small>
+                            {% endif %}
+
+                            <div class="row">
+                                <div class="col-span-12 {{ 'error' if form.upload_file.errors }}">
+                                    {{ form.upload_file.label }} {{ form.upload_file() }}
+                                    {% if form.upload_file.errors %}
+                                        {% for error in form.upload_file.errors %}
+                                            <small>{{ error }}</small>{% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action-panel-footer">
+                            <div class="row">
+                                <div class="col-span-12 ">
+                                    <a href="{{ uri_for('minion.adminops.list_ops.ui') }}">Back</a>
+
+                                    <button type="submit">{% trans %}Upload{% endtrans %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock page_content %}

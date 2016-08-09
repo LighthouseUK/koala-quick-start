@@ -1,0 +1,40 @@
+{% extends base_layout %}
+
+{% block content %}
+
+    <div class="callout panel">
+        <div class="row">
+            <div class="medium-6 columns">
+                <ul class="no-bullet">
+                    <li>Company Name: {{ current_company.company_name }}</li>
+                    <li>Contact First Name: {{ current_company.contact_first_name }}</li>
+                    <li>Contact Last Name: {{ current_company.contact_last_name }}</li>
+                    <li>Email: {{ current_company.contact_email }}</li>
+                </ul>
+            </div>
+            <div class="medium-6 columns">
+                <ul class="menu vertical">
+                    {% set continue_kwargs = {} %}
+                    {% if request.GET['continue_url'] %}
+                        {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+                    {% endif %}
+
+                    {{ '' if continue_kwargs.update({'cancel_uri': uri_for('component.admin.companies.read.ui', uid=request.GET['uid'], continue_url=request.GET['continue_url'])}) }}
+
+                    <li><a href="{{ uri_for('component.dashboard.overview.ui', company_uid=request.GET['uid']) }}" target="_blank">Emulate</a></li>
+                    <li><a href="{{ uri_for('component.admin.companies.membership.ui', uid=request.GET['uid'], **continue_kwargs) }}">Update Membership</a></li>
+                    <li><a href="{{ uri_for('component.admin.companies.team.ui', uid=request.GET['uid'], group_name=current_company.company_name.encode('utf-8'), **continue_kwargs) }}">View Users</a></li>
+                    <li><a href="{{ uri_for('component.admin.companies.add.ui', uid=request.GET['uid'], group_name=current_company.company_name.encode('utf-8'), **continue_kwargs) }}">Add User</a></li>
+                    <li><a href="{{ uri_for('component.admin.companies.remove.ui', uid=request.GET['uid'], **continue_kwargs) }}">Remove User</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="small-12 columns text-left">
+            <a href="{{ request.GET['continue_url'] or uri_for('component.admin.companies.search.ui') }}" class="small button secondary">Back to search</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

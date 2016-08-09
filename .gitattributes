@@ -1,0 +1,9 @@
+dispatch.yaml merge=ours
+app.yaml merge=ours
+backend.yaml merge=ours
+endpoints.yaml merge=ours
+dos.yaml merge=ours
+index.yaml merge=ours
+maintenance.yaml merge=ours
+queue.yaml merge=ours
+wca.yaml merge=ours

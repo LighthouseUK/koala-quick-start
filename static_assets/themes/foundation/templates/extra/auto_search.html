@@ -1,0 +1,25 @@
+{% extends base_layout %}
+{% from "macros.html" import foundation_headless_search_form, foundation_search_results_table, foundation_search_result_controls %}
+
+{% block content %}
+
+{% block search_input %}
+{% endblock search_input %}
+
+{% block search_results %}
+{% if search_results is defined %}
+    <div class="callout panel">
+        {% if cancel_uri is defined %}
+        <a href="{{ cancel_uri }}" class="button small secondary">{{ cancel_text or 'Cancel' }}</a>
+        <hr>
+        {% endif %}
+
+        {% set result_kwargs = {} %}
+            {{ '' if result_kwargs.update({'continue_url': request.url}) }}
+        {{ foundation_search_result_controls(search_results, search_results_final_page, search_results_next_link) }}
+        {{ foundation_search_results_table(search_results=search_results, search_properties=search_properties, search_name_map=search_name_map, result_link_route=search_result_link_route if search_result_link_route is defined else '', **result_kwargs) }}
+    </div>
+{% endif %}
+{% endblock search_results %}
+
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% extends base_layout %}
+
+{% block page_content %}
+     <div class="row">
+        <div class="col-span-12">
+            <div class="section">
+                <h2 class="heading">Running Jobs</h2>
+                <div class="action-panel">
+                    {% if running is defined and running %}
+                    <div class="row">
+                        <div class="col-span-12">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Started By</th>
+                                        <th>Started Timestamp</th>
+                                    </tr>
+                                </thead>
+                                {% for job in running %}
+                                    <tr>
+                                        <td>{{ job.context['pipeline_title'] }}</td>
+                                        <td>{{ job.context['current_user_name'] }}</td>
+                                        <td>{{ job.security_meta.modified }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-span-12">
+                            Nothing to display
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock page_content %}

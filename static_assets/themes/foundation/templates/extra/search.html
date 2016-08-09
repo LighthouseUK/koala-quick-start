@@ -1,0 +1,24 @@
+{% extends base_layout %}
+{% from "macros.html" import foundation_search_form, foundation_search_results_table, foundation_search_result_controls %}
+
+{% block content %}
+
+{% block search_input %}
+<div class="callout panel">
+    {{ foundation_search_form(form=form, reset_search_url=reset_search_url) }}
+</div>
+{% endblock search_input %}
+
+{% block search_results %}
+{% if search_results is defined %}
+    <div class="callout panel">
+        <p class="text-center">{{ search_help_text if search_help_text is defined }}</p>
+        {% set result_kwargs = {} %}
+            {{ '' if result_kwargs.update({'continue_url': request.url}) }}
+        {{ foundation_search_result_controls(reset_search_url=reset_search_url, search_results=search_results, search_results_final_page=search_results_final_page, search_results_next_link=search_results_next_link) }}
+        {{ foundation_search_results_table(search_results=search_results, search_properties=search_properties, search_name_map=search_name_map, result_link_route=search_result_link_route if search_result_link_route is defined else '', **result_kwargs) }}
+    </div>
+{% endif %}
+{% endblock search_results %}
+
+{% endblock content %}

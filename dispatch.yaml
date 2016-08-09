@@ -1,0 +1,9 @@
+application: lh-tools
+
+dispatch:
+
+- url: "tools.lighthouseuk.net/*"
+  module: default
+
+#- url: "tools.lighthouseuk.net/*"
+#  module: maintenance

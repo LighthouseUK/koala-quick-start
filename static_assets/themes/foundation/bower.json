@@ -1,0 +1,22 @@
+{
+  "name": "jerboa-foundation",
+  "version": "1.0.0",
+  "authors": [
+    "ZURB <foundation@zurb.com>",
+    "Lighthouse <foss@lighthouseuk.net>"
+  ],
+  "description": "Zurb Foundation theme for jerboa tools",
+  "main": "gulpfile.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "foundation-sites": "~6.2.3"
+  },
+  "private": true
+}

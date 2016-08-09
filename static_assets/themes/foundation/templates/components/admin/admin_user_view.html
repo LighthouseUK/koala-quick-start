@@ -1,0 +1,34 @@
+{% extends base_layout %}
+
+{% block content %}
+
+    <div class="callout panel">
+        <div class="row">
+            <div class="medium-6 columns">
+                <ul class="no-bullet">
+                    <li>Username: {{ current_user.username }}</li>
+                    <li>Email: {{ current_user.email_address }}</li>
+                    <li>Roles: {{ current_user.permissions.roles|join(', ') }}</li>
+                </ul>
+            </div>
+            <div class="medium-6 columns">
+                <ul class="menu vertical">
+                    {% set continue_kwargs = {} %}
+                    {% if request.GET['continue_url'] %}
+                        {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+                    {% endif %}
+                    <li><a href="{{ uri_for('component.admin.users.permissions.ui', uid=request.GET['uid'], **continue_kwargs) }}">Change Roles</a></li>
+                    <li><a href="{{ uri_for('component.admin.users.password.ui', uid=request.GET['uid'], **continue_kwargs) }}">Change Password</a></li>
+                    <li><a href="{{ uri_for('component.admin.users.profile.ui', uid=request.GET['uid'], **continue_kwargs) }}">Edit Profile</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="small-12 columns text-left">
+            <a href="{{ request.GET['continue_url'] or uri_for('component.admin.users.search.ui') }}" class="small button secondary">Back to search</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

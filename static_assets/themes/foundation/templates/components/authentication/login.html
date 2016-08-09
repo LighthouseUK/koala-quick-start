@@ -1,0 +1,44 @@
+{% extends base_layout %}
+
+{% block topbar %}
+{% endblock topbar %}
+
+{% block body %}
+    {% from "macros.html" import foundation_form %}
+
+    <div class="row spacer-60">
+        <div class="small-6 small-centered columns text-center">
+            <div class="main-logo"></div>
+            <h1>{{ _('Welcome to SSO Core.') }}</h1>
+            <p class="subheader">{{ _('Your gateway to all of our sites.') }}</p>
+        </div>
+    </div>
+    {% if status_code and status_message %}
+    <div class="row spacer-20">
+        <div class="small-12 columns">
+            <div data-alert class="callout small {{ status_message[1] }}">
+                {{ status_message[0] }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row spacer-60">
+        <div class="small-6 columns">
+            <div class="row">
+                <div class="small-6 small-offset-5 columns text-center">
+                    <h3>{{ _('Already registered?') }}</h3>
+                    {{ foundation_form(form, submit_button_size='expanded', required_asterisk=False, show_divider=False) }}
+                    <a href="{{ uri_for( 'component.authentication.forgotten.ui' ) }}">Forgotten your Password?</a>
+                </div>
+            </div>
+        </div>
+        <div class="small-6 columns">
+            <div class="row">
+                <div class="small-6 small-offset-1 end columns text-center">
+                    <h3>{{ _('Not registered?') }}</h3>
+                    <a href="{{ uri_for( 'component.user.register.ui' ) }}" class="expanded button secondary">{{ _('Register') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

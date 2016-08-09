@@ -1,0 +1,124 @@
+application: lhtools
+module: maintenance
+version: perfect-world-1-0-0-production
+runtime: python27
+api_version: 1
+threadsafe: true
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?tests$
+- ^(.*/)?test$
+- ^test/(.*/)?
+- ^COPYING.LESSER
+- ^README\..*
+- \.gitignore
+- ^\.git/.*
+- \.*\.lint$
+- ^fabfile\.py
+- ^testrunner\.py
+- ^grunt\.js
+- .*node_modules/(.*/)?
+- .*bower_components/(.*/)?
+- ^\.idea/.*
+- ^thirdparty/(.*)\.egg-info
+- ^thirdparty/(.*)\.dist-info
+
+handlers:
+# Favicon setup. You need to specify the theme path to use a specific set of icons.
+- url: /([^/]+)\.ico$
+  mime_type: image/x-icon
+  static_files: static_assets/themes/myguild/dist/favicons/\1.ico
+  expiration: 30d
+  upload: static_assets/themes/myguild/dist/favicons/(.*\.ico)$
+
+- url: /([^/]+)\.png$
+  static_files: static_assets/themes/myguild/dist/favicons/\1.png
+  expiration: 30d
+  upload: static_assets/themes/myguild/dist/favicons/(.*\.png)$
+
+- url: /browserconfig\.xml
+  static_files: static_assets/themes/myguild/dist/favicons/browserconfig.xml
+  expiration: 30d
+  upload: static_assets/themes/myguild/dist/favicons/browserconfig.xml
+
+- url: /manifest\.json
+  static_files: static_assets/themes/myguild/dist/favicons/manifest.json
+  expiration: 30d
+  upload: static_assets/themes/myguild/dist/favicons/manifest.json
+# End Favicon setup
+
+# Theme setup.
+- url: /themes/(\w*)/css/(.*\.css|.*\.css\.map)$
+  mime_type: text/css
+  static_files: static_assets/themes/\1/dist/css/\2
+  upload: static_assets/themes/(\w*)/dist/css/(.*\.css|.*\.css\.map)$
+
+- url: /themes/(\w*)/js/(.*\.js)$
+  mime_type: text/javascript
+  static_files: static_assets/themes/\1/dist/js/\2
+  upload: static_assets/themes/(\w*)/dist/js/(.*\.js)$
+
+- url: /themes/(\w*)/img/(.*\.(gif|png|jpg|jpeg))
+  static_files: static_assets/themes/\1/dist/img/\2
+  expiration: 30d
+  upload: static_assets/themes/(\w*)/dist/img/(.*\.(gif|png|jpg|jpeg))
+
+- url: /themes/(\w*)/fonts/(.*\.eot)$
+  mime_type: application/vnd.ms-fontobject
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.eot)
+
+- url: /themes/(\w*)/fonts/(.*\.otf)$
+  mime_type: font/opentype
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.otf)
+
+- url: /themes/(\w*)/fonts/(.*\.ttf)$
+  mime_type: application/x-font-ttf
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.ttf)
+
+- url: /themes/(\w*)/fonts/(.*\.woff)$
+  mime_type: application/x-font-woff
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.woff)
+
+- url: /themes/(\w*)/fonts/(.*\.svg)$
+  mime_type: image/svg+xml
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.svg)
+
+- url: /themes/(\w*)/fonts/(.*\.css)$
+  mime_type: text/css
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.css)
+# End theme setup
+
+- url: /.*
+  upload: static_assets/maintenance.html
+  secure: always
+  static_files: static_assets/maintenance.html
+# End handler setup
+
+libraries:
+- name: jinja2
+  version: latest
+- name: webapp2
+  version: latest
+- name: markupsafe
+  version: "0.15"
+- name: pycrypto
+  version: "2.6"

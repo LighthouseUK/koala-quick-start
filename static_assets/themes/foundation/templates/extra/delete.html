@@ -1,0 +1,25 @@
+{% extends base_layout %}
+{% from "macros.html" import foundation_form %}
+
+{% block content %}
+
+<div class="callout panel">
+    <h2 class="text-center">{% block title %}{{ route_title if route_title is defined }}{% endblock title %}</h2>
+    {% for key in read_properties %}
+        <div class="row">
+            <div class="small-9 columns">
+                <div class="row">
+                    <div class="small-5 columns">
+                        <label for="right-label" class="right inline">{{ property_map[key] }}</label>
+                    </div>
+                    <div class="small-7 columns">
+                        <input type="text" id="right-label" disabled value="{{ resource_object[key] or '' }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    {{ foundation_form(form) }}
+</div>
+
+{% endblock content %}

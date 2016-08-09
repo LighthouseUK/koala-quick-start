@@ -1,0 +1,8 @@
+{% extends base_layout %}
+
+{% block content %}
+     <div class="callout panel">
+        <h2>{% block title %}{{ route_title if route_title is defined }}{% endblock title %}</h2>
+        <p>This is the admin dashboard.</p>
+    </div>
+{% endblock content %}

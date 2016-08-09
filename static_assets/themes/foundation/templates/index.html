@@ -1,0 +1,13 @@
+{% extends base_layout %}
+
+{% block content %}
+{% from "macros.html" import foundation_field, foundation_form_footer %}
+    <div class="callout panel">
+        <h1 class="text-center">{% block title %}SSO Landing Page{% endblock title %}</h1>
+        <p>We can display whatever on this page. It is static so can take serious request loads easily.</p>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}

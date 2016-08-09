@@ -1,0 +1,56 @@
+{% extends base_layout %}
+{% from "foundation_macros.html" import foundation_search_form, foundation_search_results_table, foundation_search_result_controls %}
+
+{% block content %}
+
+{% block search_input %}
+<div class="callout panel">
+    {{ foundation_search_form(form=form, reset_search_url=reset_search_url) }}
+</div>
+{% endblock search_input %}
+
+{% block search_results %}
+{% if search_results is defined %}
+    <div class="callout panel">
+        {% set result_kwargs = {} %}
+            {{ '' if result_kwargs.update({'continue_url': request.url}) }}
+        {% set status_classes = {'WITHDRAWN': 'secondary', 'EXPECTED': 'warning', 'RECALLED': 'alert', 'DELIVERED': 'success', 'JUDGED': 'success'} %}
+        {{ foundation_search_result_controls(reset_search_url=reset_search_url, search_results=search_results, search_results_final_page=search_results_final_page, search_results_next_link=search_results_next_link) }}
+        <table class="hover fill-space">
+            <thead>
+            <tr>
+                {% for key in search_properties %}
+                <th>{{ search_name_map[key] }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% if search_results.results_count %}
+            {% for result in search_results.results %}
+                <tr>
+                    {% for key in search_properties %}
+                        {% if loop.index0 == 0 and search_result_link_route %}
+
+                        <td><a href="{{ uri_for(search_result_link_route, uid=result.uid, group_name=result.company_name.encode('utf-8'), **result_kwargs) }}">{{ result[key] or '' }}</a></td>
+                        {% else %}
+                            {% if key == 'status' %}
+                                <td><span class="label {{ status_classes.get(result[key], '') }}">{{ result[key] or '' }}</span></td>
+                            {% elif key == 'delivery_notes' %}
+                                <td>{{ result[key] or 'n/a' }}</td>
+                            {% else %}
+                                <td>{{ result[key] or '' }}</td>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            {% else %}
+                <tr><td colspan="{{ search_properties|length }}" class="text-center">No results found for your query</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock search_results %}
+
+{% endblock content %}

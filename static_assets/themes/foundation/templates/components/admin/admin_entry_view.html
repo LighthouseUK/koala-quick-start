@@ -1,0 +1,71 @@
+{% extends base_layout %}
+
+{% block content %}
+
+    <div class="callout panel">
+        <div class="row">
+            <div class="medium-6 columns">
+                {% set status_classes = {'WITHDRAWN': 'secondary', 'EXPECTED': 'warning', 'RECALLED': 'alert', 'DELIVERED': 'success', 'JUDGED': 'success'} %}
+                <h2><abbr title="{{ current_entry.category_title }}">{{ current_entry.entry_ref }}</abbr> ({{ current_entry.entry_type }}{{ current_entry.entry_year }})</h2>
+                <h3>{{ current_entry.entry_name }} <span class="label {{ status_classes.get(current_entry.status, '') }}">{{ current_entry.status }}</span></h3>
+                <p>{{ current_entry.description }}</p>
+            </div>
+            <div class="medium-6 columns">
+                <ul class="menu vertical">
+                    {% set continue_kwargs = {} %}
+                    {% if request.GET['continue_url'] %}
+                        {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+                    {% endif %}
+                    <li><a href="{{ uri_for('component.admin.entries.details.ui', uid=request.GET['uid'], **continue_kwargs) }}">Edit Entry Details</a></li>
+                    <li><a href="{{ uri_for('component.admin.entries.deliverydetails.ui', uid=request.GET['uid'], **continue_kwargs) }}">Edit Delivery Details</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="medium-3 columns">
+                <h4>Entry Details</h4>
+                <ul class="no-bullet">
+                    <li>Producer: {{ current_entry.producer }}</li>
+                    <li><abbr title="Alternate Brand Names">A.B.N</abbr>: {{ current_entry.alternate_brand_names|join(', ') or 'None' }}</li>
+                    <li>Allergens: {{ current_entry.contains_allergens }}</li>
+                    <li>Ingredients: {{ current_entry.ingredients }}</li>
+                    <li><abbr title="Supermarket Own Brand">S.O.B</abbr>: {{ current_entry.is_supermarket_own_brand }}</li>
+                    <li><abbr title="Available In Supermarket">A.I.S</abbr>: {{ current_entry.is_available_in_supermarket }}</li>
+                    <li>Storage: {{ current_entry.storage }}</li>
+                    <li>Imported: {{ current_entry.imported }}</li>
+                    <li>Country of Origin: {{ current_entry.country_of_origin }}</li>
+                </ul>
+            </div>
+
+            <div class="medium-3 columns">
+                <h4>Delivery Details</h4>
+                <ul class="no-bullet">
+                    <li>Description Reviewed: {{ current_entry.description_reviewed }}</li>
+                    <li>Withdrawn: {{ current_entry.withdrawn }}</li>
+                    <li>Label Downloaded: {{ current_entry.label_downloaded }}</li>
+                    <li>Assigned Delivery Schedule: {{ 'True' if current_entry.shipping_uid else 'False'}}</li>
+                    <li>Delivery Date: {{ current_entry.schedule_date }}</li>
+                    <li>Delivery Ref.: {{ current_entry.schedule_ref }}</li>
+                </ul>
+            </div>
+
+            <div class="medium-6 columns">
+                <h4>Judging Details</h4>
+                <ul class="no-bullet">
+                    <li>Locked: {{ current_entry.judging_locked }}</li>
+                    <li>Reviewed: {{ current_entry.judging_reviewed }}</li>
+                    <li>Published: {{ current_entry.judging_published }}</li>
+                    <li>Judge's Rating: {{ current_entry.judges_rating }}</li>
+                </ul>
+                <p>Judge's Comments: <br>{{ current_entry.judges_comments }}</p>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="small-12 columns text-left">
+            <a href="{{ request.GET['continue_url'] or uri_for('component.admin.entries.search.ui') }}" class="small button secondary">Back to search</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

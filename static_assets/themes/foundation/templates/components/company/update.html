@@ -1,0 +1,121 @@
+{% extends base_layout %}
+
+{% block content %}
+{% from "foundation_macros.html" import foundation_field, foundation_form_footer %}
+    <div class="callout panel">
+        <h2 class="text-center">{% block title %}{{ route_title if route_title is defined }}{% endblock title %}</h2>
+        <form action="{{ form.action_url }}" method="post">
+            {{ foundation_field(form.csrf_token) }}
+            {{ foundation_field(form.uid) }}
+            <fieldset class="fieldset">
+                <legend>Contact Details</legend>
+                {{ foundation_field(form.company_name) }}
+                {{ foundation_field(form.contact_first_name) }}
+                {{ foundation_field(form.contact_last_name) }}
+                {{ foundation_field(form.contact_email) }}
+                {{ foundation_field(form.secondary_contact_email) }}
+                {{ foundation_field(form.contact_phone) }}
+                {{ foundation_field(form.contact_mobile) }}
+            </fieldset>
+            <fieldset class="fieldset" id="delivery_address">
+                <legend>Contact Address</legend>
+                {{ foundation_field(form.delivery_country, onchange="mrHide()") }}
+                {{ foundation_field(form.delivery_address_1) }}
+                {{ foundation_field(form.delivery_address_2) }}
+                {{ foundation_field(form.delivery_address_3) }}
+                {{ foundation_field(form.delivery_city) }}
+                {{ foundation_field(form.delivery_state, row_id='delivery_us_state_block') }}
+                {{ foundation_field(form.delivery_county, row_id='delivery_uk_county_block') }}
+                {{ foundation_field(form.delivery_post_code) }}
+            </fieldset>
+            <fieldset class="fieldset" id="billing_address">
+                <legend>Billing Address</legend>
+                {{ foundation_field(form.billing_country, onchange="mrHide()") }}
+                {{ foundation_field(form.billing_address_1) }}
+                {{ foundation_field(form.billing_address_2) }}
+                {{ foundation_field(form.billing_address_3) }}
+                {{ foundation_field(form.billing_city) }}
+                {{ foundation_field(form.billing_state, row_id='billing_us_state_block') }}
+                {{ foundation_field(form.billing_county, row_id='billing_uk_county_block') }}
+                {{ foundation_field(form.billing_post_code) }}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend>About Us</legend>
+                {{ foundation_field(form.years_trading) }}
+                {{ foundation_field(form.company_size) }}
+                {{ foundation_field(form.company_turnover) }}
+            </fieldset>
+            <fieldset id="tax_registration_block" class="fieldset">
+                <legend>VAT/TVA/IVA Registration</legend>
+                {{ foundation_field(form.not_tax_registered) }}
+                {{ foundation_field(form.tax_number) }}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend>Guild Membership</legend>
+                {% if existing_model.guild_membership_verified %}
+                    {{ foundation_field(form.guild_membership_number, aria_help_text='There should be no spaces in your membership number.', disabled=true) }}
+                    <span class="label success">Verified</span>
+                {% else %}
+                    {{ foundation_field(form.guild_membership_number, aria_help_text='There should be no spaces in your membership number.') }}
+                {% endif %}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend>Social Media</legend>
+                {{ foundation_field(form.website) }}
+                {{ foundation_field(form.facebook) }}
+                {{ foundation_field(form.twitter) }}
+            </fieldset>
+
+            {{ foundation_form_footer(submit_text='Update Company', cancel_text='Cancel', cancel_uri=request.GET.get('continue_url', uri_for('default', company_uid=request.GET['uid']))) }}
+        </form>
+    </div>
+
+{% endblock content %}
+
+{% block footer_scripts %}
+<script type="text/javascript">
+    function taxHide(){
+        if(document.getElementById('billing_country').value == 'GB'){
+            document.getElementById('tax_registration_block').style.display = 'none';
+        }else{
+            document.getElementById('tax_registration_block').style.display = 'block';
+        }
+    }
+
+    function deliveryStateHide(){
+        if(document.getElementById('delivery_country').value == 'GB'){
+            document.getElementById('delivery_us_state_block').style.display = 'none';
+            document.getElementById('delivery_uk_county_block').style.display = 'block';
+        }else if(document.getElementById('delivery_country').value == 'US'){
+            document.getElementById('delivery_us_state_block').style.display = 'block';
+            document.getElementById('delivery_uk_county_block').style.display = 'none';
+        }else{
+            document.getElementById('delivery_us_state_block').style.display = 'none';
+            document.getElementById('delivery_uk_county_block').style.display = 'none';
+        }
+    }
+
+    function billingStateHide(){
+        if(document.getElementById('billing_country').value == 'GB'){
+            document.getElementById('billing_us_state_block').style.display = 'none';
+            document.getElementById('billing_uk_county_block').style.display = 'block';
+        }else if(document.getElementById('billing_country').value == 'US'){
+            document.getElementById('billing_us_state_block').style.display = 'block';
+            document.getElementById('billing_uk_county_block').style.display = 'none';
+        }else{
+            document.getElementById('billing_us_state_block').style.display = 'none';
+            document.getElementById('billing_uk_county_block').style.display = 'none';
+        }
+    }
+
+    function mrHide(){
+        taxHide();
+        deliveryStateHide();
+        billingStateHide();
+    }
+
+    (function() {
+       mrHide();
+    })();
+</script>
+{% endblock footer_scripts %}

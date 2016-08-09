@@ -1,0 +1,49 @@
+{% extends base_layout %}
+
+{% block content %}
+    {% from "foundation_macros.html" import foundation_form, foundation_field, foundation_form_footer %}
+
+    <div class="callout panel">
+        {% set continue_kwargs = {} %}
+        {% if request.GET['continue_url'] %}
+            {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+        {% endif %}
+{#        {{ foundation_form(form=form, submit_text='Update Entry Details', cancel_text='Back to Entry Overview', cancel_uri=uri_for('component.admin.entries.read.ui', uid=request.GET['uid'], **continue_kwargs)) }}#}
+
+        <form action="{{ form.action_url }}" method="post">
+            {{ foundation_field(form.csrf_token) }}
+            {{ foundation_field(form.uid) }}
+            <fieldset class="fieldset">
+                <legend>Entry Details</legend>
+                {{ foundation_field(form.category, aria_help_text=help_text) }}
+                {{ foundation_field(form.number) }}
+                {{ foundation_field(form.entry_name, aria_help_text='Please note this is how your product will appear on your certificate if it achieves an award – remember to include the flavour of product if it is part of a range.') }}
+                {{ foundation_field(form.alternate_brand_names) }}
+                {{ foundation_field(form.description, aria_help_text='Please include the <abbr title="Alochol by volume">ABV</abbr> in the your product description.', maxlength=150) }}
+                {{ foundation_field(form.producer) }}
+                {{ foundation_field(form.ingredients, maxlength=200) }}
+                {{ foundation_field(form.storage) }}
+                {{ foundation_field(form.imported) }}
+                {{ foundation_field(form.country_of_origin) }}
+                {{ foundation_field(form.is_supermarket_own_brand) }}
+                {{ foundation_field(form.is_available_in_supermarket) }}
+                {{ foundation_field(form.contains_allergens) }}
+                <hr>
+                {{ foundation_field(form.description_reviewed) }}
+                <hr>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend>Customize Public Results</legend>
+                <p>You can use these fields to set custom public result details for an entry.
+                    If these are left blank then we will take the details from the company profile.</p>
+                {{ foundation_field(form.custom_company_name) }}
+                {{ foundation_field(form.custom_website) }}
+                {{ foundation_field(form.custom_facebook) }}
+                {{ foundation_field(form.custom_twitter) }}
+            </fieldset>
+            {{ foundation_form_footer(submit_text='Update Entry', cancel_text='Back to Entry Overview', cancel_uri=uri_for('component.admin.entries.read.ui', uid=request.GET['uid'], **continue_kwargs)) }}
+        </form>
+    </div>
+
+{% endblock content %}

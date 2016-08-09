@@ -1,0 +1,20 @@
+{% extends base_layout %}
+
+{% block content %}
+    <div class="callout panel text-center">
+        <h2>Select Company</h2>
+    {% if group_list is defined and group_list %}
+        <p>You may return to this page at any time via the drop down menu located at the top right corner of your screen.</p>
+        <ul class="no-bullet">
+        {% for group in group_list %}
+            <li><a href="{{ uri_for('component.dashboard.overview.ui', company_uid=group.group_uid) }}">{{ group.group_name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        {% if user_can(user=user, action='create_company') %}
+        <p>You are not currently connected to any companies. Please create one by clicking below.</p>
+        <a href="{{ uri_for('component.company.create.ui') }}" class="button">{% trans %}Create Company{% endtrans %}</a>
+        {% endif %}
+    {% endif %}
+    </div>
+{% endblock content %}

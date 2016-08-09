@@ -1,0 +1,35 @@
+{% extends base_layout %}
+
+{% block content %}
+
+    <div class="callout panel">
+        <div class="row">
+            <div class="medium-6 columns">
+                <ul class="no-bullet">
+                    <li>Order Reference: {{ current_order.order_reference }}</li>
+                    <li>Company Name: {{ current_order.customer_company_name }}</li>
+                    <li>Customer First Name: {{ current_order.customer_first_name }}</li>
+                    <li>Customer Last Name: {{ current_order.customer_last_name }}</li>
+                    <li>Customer Email: {{ current_order.customer_email }}</li>
+                    <li>Order Complete: {{ current_order.order_complete }}</li>
+                </ul>
+            </div>
+            <div class="medium-6 columns">
+                <ul class="menu vertical">
+                    {% set continue_kwargs = {} %}
+                    {% if request.GET['continue_url'] %}
+                        {{ '' if continue_kwargs.update({'continue_url': request.GET['continue_url']}) }}
+                    {% endif %}
+                    <li>No options available at this time</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="small-12 columns text-left">
+            <a href="{{ request.GET['continue_url'] or uri_for('component.admin.orders.search.ui') }}" class="small button secondary">Back to search</a>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

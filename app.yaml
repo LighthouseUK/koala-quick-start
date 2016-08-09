@@ -1,0 +1,158 @@
+application: application-id
+module: default
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?tests$
+- ^(.*/)?test$
+- ^test/(.*/)?
+- ^COPYING.LESSER
+- ^README\..*
+- \.gitignore
+- ^\.git/.*
+- \.*\.lint$
+- ^fabfile\.py
+- ^testrunner\.py
+- ^grunt\.js
+- .*node_modules/(.*/)?
+- .*bower_components/(.*/)?
+- ^\.idea/.*
+- ^thirdparty/(.*)\.egg-info
+- ^thirdparty/(.*)\.dist-info
+
+
+# By turning onthe deferred built in you are able to use the deferred library, which is very useful for triggering work
+# to happen outside of a user request.
+builtins:
+- deferred: on
+
+
+# Below are examples of the handlers we use in other projects. They work on the assumption that you have a `static_assets`
+# folder which contains
+#   - favicons
+#   - themes
+#   - - theme_name
+#   - maintenance.html
+
+# Note: you could change the path of the favicons so that they load from a theme instead of from a top level dir. The
+# downside is that you would need to specify the theme name explicitly, which means you would need to puch an update if
+# you switch themes.
+
+
+handlers:
+# Favicon setup. You need to specify the theme path to use a specific set of icons.
+- url: /([^/]+)\.ico$
+  mime_type: image/x-icon
+  static_files: static_assets/favicons/\1.ico
+  expiration: 30d
+  upload: static_assets/favicons/(.*\.ico)$
+
+- url: /([^/]+)\.png$
+  static_files: static_assets/favicons/\1.png
+  expiration: 30d
+  upload: static_assets/favicons/(.*\.png)$
+
+- url: /browserconfig\.xml
+  static_files: static_assets/favicons/browserconfig.xml
+  expiration: 30d
+  upload: static_assets/favicons/browserconfig.xml
+
+- url: /manifest\.json
+  static_files: static_assets/favicons/manifest.json
+  expiration: 30d
+  upload: static_assets/favicons/manifest.json
+# End Favicon setup
+
+# Theme setup.
+- url: /themes/(\w*)/css/(.*\.css|.*\.css\.map)$
+  mime_type: text/css
+  static_files: static_assets/themes/\1/dist/css/\2
+  upload: static_assets/themes/(\w*)/dist/css/(.*\.css|.*\.css\.map)$
+
+- url: /themes/(\w*)/js/(.*\.js)$
+  mime_type: text/javascript
+  static_files: static_assets/themes/\1/dist/js/\2
+  upload: static_assets/themes/(\w*)/dist/js/(.*\.js)$
+
+- url: /themes/(\w*)/img/(.*\.(gif|png|jpg|jpeg))
+  static_files: static_assets/themes/\1/dist/img/\2
+  expiration: 30d
+  upload: static_assets/themes/(\w*)/dist/img/(.*\.(gif|png|jpg|jpeg))
+
+- url: /themes/(\w*)/fonts/(.*\.eot)$
+  mime_type: application/vnd.ms-fontobject
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.eot)
+
+- url: /themes/(\w*)/fonts/(.*\.otf)$
+  mime_type: font/opentype
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.otf)
+
+- url: /themes/(\w*)/fonts/(.*\.ttf)$
+  mime_type: application/x-font-ttf
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.ttf)
+
+- url: /themes/(\w*)/fonts/(.*\.woff)$
+  mime_type: application/x-font-woff
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.woff)
+
+- url: /themes/(\w*)/fonts/(.*\.svg)$
+  mime_type: image/svg+xml
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.svg)
+
+- url: /themes/(\w*)/fonts/(.*\.css)$
+  mime_type: text/css
+  expiration: 30d
+  static_files: static_assets/themes/\1/dist/fonts/\2
+  upload: static_assets/themes/(\w*)/dist/fonts/(.*\.css)
+# End theme setup
+
+- url: /
+  script: frontends.appname.frontend.app
+  secure: always
+
+- url: /.*
+  script: frontends.appname.frontend.app
+  secure: always
+# End handler setup
+
+error_handlers:
+  # Only errors with error_code, don't put a default error here
+  # Again, you need to change your theme name here. Alternately just move these to a top level dir
+  - error_code: over_quota
+    file: static_assets/themes/foundation/templates/over_quota.html
+
+  - error_code: dos_api_denial
+    file: static_assets/themes/foundation/templates/dos_api_denial.html
+
+  - error_code: timeout
+    file: static_assets/themes/foundation/templates/timeout.html
+
+libraries:
+- name: jinja2
+  version: latest
+- name: webapp2
+  version: latest
+- name: markupsafe
+  version: latest
+- name: pycrypto
+  version: latest

@@ -1,0 +1,49 @@
+{% extends base_layout %}
+
+{% block page_content %}
+    {% if upload_success is defined and upload_success %}
+        <div class="row">
+            <div class="col-span-12"><span class="label success col-span-12 text-centre">Successfully uploaded '{{ uploaded_file_type }}' file '{{ uploaded_file_name }}'</span></div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-span-12"><a href="{{ uri_for('minion.adminops.upload_test.ui') }}" class="button">Upload File</a></div>
+    </div>
+    <div class="row">
+        <div class="col-span-12">
+            <div class="section">
+                <h2 class="heading">Uploaded Files</h2>
+                <div class="action-panel">
+                    {% if uploads_list is defined and uploads_list %}
+                    <div class="row">
+                        <div class="col-span-12">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>GCS Loation</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                {% for upload in uploads_list %}
+                                    <tr>
+                                        <td>{{ upload[1] }}</td>
+                                        <td>{{ upload[0] }}</td>
+                                        <td>{% if delete_form %}<form action="{{ delete_form_action_url if delete_form_action_url is defined }}" method="post">{{ delete_form.csrf_token }}{{delete_form.file_name(value=upload[1])}}<button type="submit">Delete</button></form>{% else %}&dash;&dash;{% endif %}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-span-12">
+                            Nothing to display
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock page_content %}

@@ -1,0 +1,29 @@
+{% extends base_layout %}
+
+{% block topbar %}
+{% endblock topbar %}
+
+{% block body %}
+    {% from "macros.html" import foundation_form %}
+
+    <div class="row spacer-60">
+        <div class="small-6 small-centered columns text-center">
+            <div class="main-logo"></div>
+        </div>
+    </div>
+    {% if status_code and status_message %}
+    <div class="row spacer-20">
+        <div class="small-12 columns">
+            <div data-alert class="callout small {{ status_message[1] }}">
+                {{ status_message[0] }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="small-4 small-centered columns text-center">
+            <h3>{{ _('Email Address Verified') }}</h3>
+            <p>Thanks for verifying your email address. You may close this tab or go to your <a href="{{ uri_for(home_route) }}">Dashboard</a> </p>
+        </div>
+    </div>
+{% endblock body %}

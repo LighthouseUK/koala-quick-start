@@ -1,0 +1,62 @@
+{% extends base_layout %}
+
+{% block page_content %}
+    {% from "macros.html" import print_acton_url %}
+     <div class="row">
+        <div class="col-span-12">
+            <div class="section">
+                <h2 class="heading">Cache Lookup</h2>
+                <form action="{{ print_acton_url(form) }}" method="get">
+                    <div class="action-panel">
+                        {{ form.csrf_token }}
+                        {% if form.csrf_token.errors %}
+                            <small class="error">You have submitted an invalid CSRF token</small>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-span-12 {{ 'error' if form.cache_key.errors }}">
+                                {{form.cache_key.label}} {{form.cache_key()}}
+                                {% if form.cache_key.errors %}
+                                    {% for error in form.cache_key.errors %}<small>{{ error }}</small>{% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-panel-footer">
+                        <div class="row">
+                            <div class="col-span-12 ">
+                                <button class="left" type="submit">{% trans %}Get{% endtrans %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if cache_value is defined and cache_value %}
+    <div class="row">
+        <div class="col-span-12">
+            <div class="section">
+                <h4 class="heading">Cache Value</h4>
+                <code>
+                    {{ cache_value.cache_data|e }}
+                </code>
+                {% if cache_type == 'resultsgt2015' %}
+                <br />
+                <br />
+                <code>
+                {% if cache_value.cache_data.result_details is defined %}
+                    {% for key, entity in cache_value.cache_data.result_details.iteritems() %}
+                        <b>{{ decode_ndb_key(key)|e }}</b>
+                        <br />
+                    {% endfor %}
+                {% endif %}
+                </code>
+                <br />
+                <br />
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock page_content %}

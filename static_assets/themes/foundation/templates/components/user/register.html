@@ -1,0 +1,29 @@
+{% extends base_layout %}
+
+{% block topbar %}
+{% endblock topbar %}
+
+{% block body %}
+    {% from "macros.html" import foundation_form %}
+
+    <div class="row spacer-60">
+        <div class="small-6 small-centered columns text-center">
+            <div class="main-logo"></div>
+        </div>
+    </div>
+    {% if status_code and status_message %}
+    <div class="row spacer-20">
+        <div class="small-12 columns">
+            <div data-alert class="callout small {{ status_message[1] }}">
+                {{ status_message[0] }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="small-4 small-centered columns text-center">
+            <h3>{{ _('Create User Account') }}</h3>
+            {{ foundation_form(form, submit_button_size='expanded', required_asterisk=False, show_divider=False, submit_text='Create') }}
+        </div>
+    </div>
+{% endblock body %}

@@ -1,0 +1,400 @@
+{% macro print_url(url) -%}
+    {{ uri_for(url, **kwargs)|safe }}
+{%- endmacro %}
+
+{#{% macro foundation_field_old(field, label='', layout='columns', span='12', print_row=True, print_cols=True, show_label=True, use_placeholder=False, required_asterisk=True, row_id='') -%}#}
+{#    {% if field.type == "HiddenField" or field.type == "CSRFTokenField" or field.type == "Recaptcha2ResponseField" %}#}
+{#        {{ field(**kwargs) }}#}
+{#    {% elif field.type == 'Recaptcha2InputField' %}#}
+{#        {% if print_row %}#}
+{#        <div class="row">#}
+{#        {% endif %}#}
+{#            <div class="{{ "small-%s %s "|format(span, layout) }}" style="margin-bottom: 20px">#}
+{#                {{ field(**kwargs) }}#}
+{#            </div>#}
+{#        {% if print_row %}#}
+{#        </div>#}
+{#        {% endif %}#}
+{#    {% else %}#}
+{#        {% if print_row %}#}
+{#        <div {{ 'id="' ~ row_id ~ '"' if row_id }} class="row">#}
+{#        {% endif %}#}
+{#            {% if print_cols %}#}
+{#            <div class="{{ "small-%s %s %s"|format(span, layout, 'error' if field.errors else '') }}">#}
+{#            {% endif %}#}
+{#                {% if show_label %}#}
+{#                <label>{{ label or field.label.text }}{{ '*' if field.flags.required and required_asterisk }}#}
+{#                    {% if use_placeholder %}#}
+{#                    {{ field(placeholder=label or field.label.text, **kwargs) }}#}
+{#                    {% else %}#}
+{#                    {{ field(**kwargs) }}#}
+{#                    {% endif %}#}
+{#                </label>#}
+{#                {% else %}#}
+{#                    {% if use_placeholder %}#}
+{#                    {{ field(placeholder=label or field.label.text, **kwargs) }}#}
+{#                    {% else %}#}
+{#                    {{ field(**kwargs) }}#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+{#                {% if field.errors %}#}
+{#                    {% for error in field.errors %}<small class="error">{{ error }}</small>{% endfor %}#}
+{#                {% endif %}#}
+{#            {% if print_cols %}#}
+{#            </div>#}
+{#        {% if print_row %}#}
+{#        </div>#}
+{#        {% endif %}#}
+{#        {% endif %}#}
+{#    {% endif %}#}
+{#{%- endmacro %}#}
+
+{% macro foundation_field(field, label='', show_label=True, use_placeholder=False, required_asterisk=True, aria_help_text='', show_error=True) -%}
+    {% if field.type == "HiddenField" or field.type == "CSRFTokenField" or field.type == "Recaptcha2ResponseField" %}
+        {{ field(**kwargs) }}
+    {% elif field.type == 'Recaptcha2InputField' %}
+        <label>
+            {{ field(**kwargs) }}
+        </label>
+    {% else %}
+        {% set aria = '' ~ field.id ~ 'HelpText' if aria_help_text else '' %}
+        {% set input_label = label or field.label.text %}
+        {% set field_kwargs = kwargs %}
+        {% if field_kwargs['row_id'] %}
+        <div id="{{ field_kwargs['row_id'] }}">
+        {% endif %}
+        {% if show_label %}
+        <label {{ 'for="' ~ field.id ~ '"' }} {{ 'class="is-invalid-label"' if field.errors }}>
+            {{ input_label }}
+        {% endif %}
+            {% if use_placeholder %}
+                {{ '' if field_kwargs.update({'placeholder': input_label}) }}
+            {% endif %}
+            {% if field.errors %}
+                {% if field.type == "RadioField" %}
+                    {{  '' if field_kwargs.update({'class': 'is-invalid-input no-bullet'}) }}
+                {% else %}
+                    {{  '' if field_kwargs.update({'class': 'is-invalid-input'}) }}
+                {% endif %}
+                {{  '' if field_kwargs.update({'aria-invalid': ''}) }}
+            {% else %}
+                {% if field.type == "RadioField" %}
+                {{  '' if field_kwargs.update({'class': 'no-bullet'}) }}
+                {% endif %}
+            {% endif %}
+            {% if aria_help_text or (field.flags.required and required_asterisk) %}
+                {{  '' if field_kwargs.update({'aria-describedby': aria}) }}
+            {% endif %}
+            {{ field(**field_kwargs) }}
+        {% if show_label %}
+        </label>
+        {% endif %}
+        {% if aria_help_text or (field.flags.required and required_asterisk) %}
+        <p class="help-text" id="{{ aria }}">{{ 'This is a required field.' if field.flags.required and required_asterisk }} {{ aria_help_text }}</p>
+        {% endif %}
+        {% if field.errors and show_error %}
+            {% for error in field.errors %}<small class="form-error is-visible">{{ error }}</small>{% endfor %}
+        {% endif %}
+        {% if field_kwargs['row_id'] %}
+        </div>
+        {% endif %}
+
+    {% endif %}
+{%- endmacro %}
+
+{% macro foundation_switch_field(field, label='', show_label=True, active_text='', inactive_text='', required_asterisk=True,  aria_help_text='', switch_size='') -%}
+
+        {% set aria = '' ~ field.id ~ 'HelpText' if aria_help_text else '' %}
+        {% set input_label = label or field.label.text %}
+        {% set field_kwargs = kwargs %}
+
+        {{  '' if field_kwargs.update({'class': 'switch-input'}) }}
+        {% if aria_help_text or (field.flags.required and required_asterisk) %}
+            {{  '' if field_kwargs.update({'aria-describedby': aria}) }}
+        {% endif %}
+
+        {% if show_label %}
+        <p>{{ input_label }}</p>
+        {% endif %}
+        <div class="switch {{ switch_size }}">
+			{{ field(**field_kwargs) }}
+			<label class="switch-paddle" for="{{ field.id }}">
+				<span class="show-for-sr">{{ input_label }}</span>
+				<span class="switch-active" aria-hidden="true">{{ active_text }}</span>
+				<span class="switch-inactive" aria-hidden="true">{{ inactive_text }}</span>
+			</label>
+		</div>
+        {% if aria_help_text or (field.flags.required and required_asterisk) %}
+        <p class="help-text" id="{{ aria }}">{{ 'This is a required field.' if field.flags.required and required_asterisk }} {{ aria_help_text }}</p>
+        {% endif %}
+        {% if field.errors %}
+            {% for error in field.errors %}<small class="form-error is-visible">{{ error }}</small>{% endfor %}
+        {% endif %}
+{%- endmacro %}
+
+{% macro foundation_inline_button_field(field, label='', layout='columns', span='12', button_span=3, button_text='Go', use_placeholder=True, button_type='button') -%}
+    {% set field_size = 12 - button_span %}
+            <div class="input-group">
+                {{ foundation_field(field, label=label, layout=layout, span=field_size, print_row=False, print_cols=False, show_label=False, use_placeholder=use_placeholder, class='input-group-field', **kwargs) }}
+                <div class="input-group-button">
+                    <button type="{{ button_type }}" class="button">{{ button_text }}</button>
+                </div>
+            </div>
+{%- endmacro %}
+
+{% macro foundation_inline_fields(fields, fields_per_row=4) -%}
+        {% set row_size = (12/fields_per_row)|round(method='ceil')|int %}
+        {% set rows = (((fields|length)/fields_per_row)|round(method='ceil')|int) or 1 %}
+            {% for field in fields %}
+                {% if not loop.index0 % fields_per_row %}
+                    {% if loop.index0 != 0 %}
+                        </div>
+                    {% endif %}
+                    <div class="row medium-collapse large-uncollapse">
+                {% endif %}
+                    <div class="medium-{{ row_size }} columns">
+                    {{ foundation_field(field, span=row_size, print_row=False, **kwargs) }}
+                    </div>
+            {% endfor %}
+            </div>
+{%- endmacro %}
+
+{% macro foundation_footer_nav(next_text=False, next_uri='', cancel_text='Back', cancel_uri='', next_button_size='small', cancel_button_size='small', show_divider=True) -%}
+    {% if show_divider %}
+    <hr>
+    {% endif %}
+    <div class="row">
+    {% if next_text and cancel_text and cancel_uri %}
+        <div class="small-6 columns text-left">
+            <a href="{{ cancel_uri }}" class="{{ cancel_button_size }}button secondary">{{ cancel_text }}</a>
+        </div>
+        <div class="small-6 columns text-right">
+            <a href="{{ next_uri }}" class="{{ next_button_size }}button">{{ next_text }}</a>
+        </div>
+    {% elif cancel_text %}
+        <div class="small-12 columns text-left">
+            <a href="{{ cancel_uri }}" class="{{ cancel_button_size }}button">{{ cancel_text }}</a>
+        </div>
+    {% elif next_text %}
+        <div class="small-12 columns text-right">
+            <a href="{{ next_uri }}" class="{{ next_button_size }}button">{{ next_text }}</a>
+        </div>
+    {% endif %}
+    </div>
+{%- endmacro %}
+
+{% macro foundation_form_footer(submit_text='Submit', cancel_text=False, cancel_uri='', submit_button_size='small', cancel_button_size='small', show_divider=True) -%}
+    {% if show_divider %}
+    <hr>
+    {% endif %}
+    <div class="row">
+    {% if submit_text and cancel_text and cancel_uri %}
+        <div class="small-6 columns text-left">
+        <a href="{{ cancel_uri }}" class="{{ cancel_button_size }}button secondary">{{ cancel_text }}</a>
+        </div>
+        <div class="small-6 columns text-right">
+        <button type="submit" class="{{ submit_button_size }} button">{{ submit_text }}</button>
+        </div>
+    {% elif submit_text %}
+        <div class="small-12 columns text-right">
+            <button type="submit" class="{{ submit_button_size }} button">{{ submit_text }}</button>
+        </div>
+    {% endif %}
+    </div>
+{%- endmacro %}
+
+{% macro foundation_form(form, id='', method='post', submit_text='Submit', cancel_text=False, cancel_uri='', footer=True, submit_button_size='small', cancel_button_size='small', show_divider=True, disable_autocomplete=False) -%}
+    <form {{ 'autocomplete="off"' if disable_autocomplete }} {{ 'id="' ~ id ~ '"' if id }} action="{{ form.action_url }}" method="{{ method }}">
+        {% for field in form %}
+            {{ foundation_field(field, **kwargs) }}
+        {% endfor %}
+        {% if footer %}
+        {{ foundation_form_footer(submit_text=submit_text, cancel_text=cancel_text, cancel_uri=cancel_uri, submit_button_size=submit_button_size, cancel_button_size=cancel_button_size, show_divider=show_divider) }}
+        {% endif %}
+    </form>
+{%- endmacro %}
+
+{% macro foundation_search_form(form, reset_search_url, id='', method='get', submit_text='Search', open_advanced=False, css_toggle=True) -%}
+    <form {{ 'id="' ~ id ~ '"' if id }} action="{{ form.action_url }}" method="{{ method }}">
+        {% if form.cursor is defined %}
+            {{ foundation_field(form.cursor) }}
+            {% if form.cursor.data %}
+            <p class="text-center"><a href="{{ reset_search_url }}" class="button alert">New Search</a></p>
+            {% else %}
+            {{ foundation_inline_button_field(form.query, button_text='Search', label="I'm looking for...", autofocus="autofocus", button_type='submit') }}
+            {% endif %}
+        {% endif %}
+        {% if (form.sort_options is defined and form.sort_options) or (form.filter_options is defined and form.filter_options) %}
+            {% if css_toggle %}
+
+            <style scoped>
+                #advanced_search_toggle:checked + .advanced_search { display: block!important; }
+            </style>
+            <label for=advanced_search_toggle class="text-center" style="margin-bottom: 20px;text-decoration: underline;">Toggle Advanced Search Options</label>
+            <input type='checkbox' style='display: none' id=advanced_search_toggle {{ 'checked' if open_advanced }}>
+
+            {% endif %}
+            <div class="advanced_search" {{ 'style="display: none;"' if not open_advanced }}>
+
+            {% if form.sort_options %}
+                <fieldset class="fieldset">
+                    <legend>Sort Options</legend>
+                    {{ foundation_inline_fields(form.sort_options, fields_per_row=3) }}
+                </fieldset>
+            {% endif %}
+
+            {% if form.filter_options  %}
+                <fieldset class="fieldset">
+                    <legend>Filters</legend>
+                    {{ foundation_inline_fields(form.filter_options, fields_per_row=4) }}
+                </fieldset>
+            {% endif %}
+
+            </div>
+        {% endif %}
+    </form>
+{%- endmacro %}
+
+{% macro foundation_headless_search_form(form, reset_search_url, id='', method='get', submit_text='Apply', submit_button_size='small', open_advanced=False, css_toggle=True) -%}
+    <form {{ 'id="' ~ id ~ '"' if id }} action="{{ form.action_url }}" method="{{ method }}">
+        {% if form.uid is defined %}
+            {% if form.uid.data %}
+                {{ foundation_field(form.uid) }}
+            {% endif %}
+        {% endif %}
+        {% if form.cursor is defined %}
+            {{ foundation_field(form.cursor) }}
+        {% endif %}
+        {% if form.cancel_uri is defined %}
+            {{ foundation_field(form.cancel_uri) }}
+        {% endif %}
+        {% if (form.sort_options is defined and form.sort_options) or (form.filter_options is defined and form.filter_options) %}
+            {% if css_toggle %}
+            <style scoped>
+                #advanced_search_toggle:checked + .advanced_search { display: block!important; }
+            </style>
+            <label for=advanced_search_toggle class="text-center" style="margin-bottom: 20px;">Toggle Advanced Search Options</label>
+            <input type='checkbox' style='display: none' id=advanced_search_toggle {{ 'checked' if open_advanced }}>
+
+            {% endif %}
+            <div class="advanced_search" {{ 'style="display: none;"' if not open_advanced }}>
+
+            {% if form.sort_options %}
+                <fieldset class="fieldset">
+                    <legend>Sort Options</legend>
+                    {{ foundation_inline_fields(form.sort_options, fields_per_row=3) }}
+                </fieldset>
+            {% endif %}
+
+            {% if form.filter_options  %}
+                <fieldset class="fieldset">
+                    <legend>Filters</legend>
+                    {{ foundation_inline_fields(form.filter_options, fields_per_row=4) }}
+                </fieldset>
+            {% endif %}
+                <hr>
+                <div class="text-right">
+                    <button type="submit" class="{{ submit_button_size }} button">{{ submit_text }}</button>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{%- endmacro %}
+
+{% macro gff_foundation_headless_search_form(form, reset_search_url, id='', method='get', submit_text='Apply', submit_button_size='small', open_advanced=False, css_toggle=True) -%}
+    <form {{ 'id="' ~ id ~ '"' if id }} action="{{ form.action_url }}" method="{{ method }}">
+        {% if form.uid is defined %}
+            {% if form.uid.data %}
+                {{ foundation_field(form.uid) }}
+            {% endif %}
+        {% endif %}
+        {% if form.cursor is defined %}
+            {{ foundation_field(form.cursor) }}
+        {% endif %}
+        {% if form.company_uid is defined %}
+            {{ foundation_field(form.company_uid) }}
+        {% endif %}
+        {% if form.cancel_uri is defined %}
+            {{ foundation_field(form.cancel_uri) }}
+        {% endif %}
+        {% if (form.sort_options is defined and form.sort_options) or (form.filter_options is defined and form.filter_options) %}
+            {% if css_toggle %}
+            <style scoped>
+                #advanced_search_toggle:checked + .advanced_search { display: block!important; }
+            </style>
+            <label for=advanced_search_toggle class="text-center" style="margin-bottom: 20px;text-decoration: underline;">Toggle Advanced Search Options</label>
+            <input type='checkbox' style='display: none' id=advanced_search_toggle {{ 'checked' if open_advanced }}>
+
+            {% endif %}
+            <div class="advanced_search" {{ 'style="display: none;"' if not open_advanced }}>
+
+            {% if form.sort_options %}
+                <fieldset class="fieldset">
+                    <legend>Sort Options</legend>
+                    {{ foundation_inline_fields(form.sort_options, fields_per_row=3) }}
+                </fieldset>
+            {% endif %}
+
+            {% if form.filter_options  %}
+                <fieldset class="fieldset">
+                    <legend>Filters</legend>
+                    {{ foundation_inline_fields(form.filter_options, fields_per_row=4) }}
+                </fieldset>
+            {% endif %}
+                <hr>
+                <div class="text-right">
+                    <button type="submit" class="{{ submit_button_size }} button">{{ submit_text }}</button>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{%- endmacro %}
+
+{% macro foundation_search_result_controls(search_results, search_results_final_page, search_results_next_link, reset_search_url=False) -%}
+    <div class="row">
+        <div class="medium-6 columns">
+            {% if reset_search_url %}
+            <a href="{{ reset_search_url }}" class="button tiny alert">Clear Search</a>
+            {% endif %}
+        </div>
+        <div class="medium-6 columns text-right">
+
+            <ul class="pagination right" role="menubar" aria-label="Pagination">
+                <li class="unavailable">About {{ search_results.results_count }} results</li>
+                {% if search_results.cursor or search_results_final_page%}
+                <li class="arrow"><a href="{{ search_results_next_link }}">{% if search_results.cursor %}Next{% else %}Search Again{% endif %} &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro foundation_search_results_table(search_results, search_properties, search_name_map, result_link_route) -%}
+    <table class="hover fill-space">
+        <thead>
+        <tr>
+            {% for key in search_properties %}
+            <th>{{ search_name_map[key] }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% if search_results.results_count %}
+        {% for result in search_results.results %}
+            <tr>
+                {% for key in search_properties %}
+                    {% if loop.index0 == 0 and result_link_route %}
+                    <td><a href="{{ uri_for(result_link_route, uid=result.uid, **kwargs) }}">{{ result[key] or '' }}</a></td>
+                    {% else %}
+                    <td>{% if result[key] is defined %}{{ result[key]|int if result[key] is number else result[key] }}{% endif %}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        {% else %}
+            <tr><td colspan="{{ search_properties|length }}" class="text-center">No results found for your query</td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+{%- endmacro %}
+

@@ -1,0 +1,41 @@
+    <div class="top-bar hide-for-print">
+        <div class="top-bar-title">
+            <strong>{{ app_info.title }}</strong>
+        </div>
+        <div class="top-bar-right">
+            <ul class="menu">
+                {% if user_is(user=user, role='judge') or user_is(user=user, role='judgingreview') or user_is(user=user, role='admin') %}
+                <li><a class="{{ 'active' if endpoint == 'judging' else '' }}" href="{{ uri_for('component.judging.dashboard.ui') }}"><i class="fi-comment-quotes small-icon"></i> <span>{{ gettext( 'Judging' ) }}</span></a></li>
+                {% endif %}
+                {% if user_is(user=user, role='admin') %}
+                <li><a class="{{ 'active' if endpoint == 'directory' else '' }}" href="#"><i class="fi-address-book small-icon"></i> <span>{{ gettext( 'Directory' ) }}</span></a></li>
+                {% endif %}
+                <li><a class="{{ 'active' if endpoint == 'myguild' else '' }}" href="{{ uri_for('component.dashboard.overview.ui') }}"><i class="fi-home small-icon"></i> <span>{{ gettext( 'MyGuild' ) }}</span></a></li>
+                {% if user_is(user=user, role='admin') %}
+                <li><a class="{{ 'active' if endpoint == 'admin' else '' }}" href="{{ uri_for('component.admin.dashboard.ui') }}"><i class="fi-widget small-icon"></i> <span>{{ gettext( 'Admin' ) }}</span></a></li>
+                {% endif %}
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn dark">&#9660;</button>
+                        <div class="dropdown-content right">
+                            {% if endpoint == 'myguild' %}
+                            <a href="{{ uri_for('component.company.select.ui') }}" aria-label="Switch the company you are browsing as">Switch Company</a>
+                            {% endif %}
+                            {% if logout_uri is defined %}
+                            <a href="{{ uri_for(logout_uri) }}" aria-label="Logout of MyGuild">Logout</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+	<div class="secondary-top-bar hide-for-print">
+        <div class="top-bar-left">
+            <nav aria-label="You are here:" role="navigation">
+                <ul class="menu">
+                    <li><a href="#">{{ gettext( route_title ) }}</a></li>
+                </ul>
+            </nav>
+        </div>
+	</div>

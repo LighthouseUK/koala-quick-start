@@ -1,0 +1,36 @@
+{% extends base_layout %}
+
+{% block page_content %}
+    {% from "macros.html" import print_acton_url %}
+     <div class="row">
+        <div class="col-span-12">
+            <div class="section">
+                <h2 class="heading">Available Admin Ops</h2>
+                <form  action="{{ print_acton_url(form) }}" method="post">
+                    <div class="action-panel">
+                        {{ form.csrf_token }}
+                        {% if form.csrf_token.errors %}
+                            <small class="error">You have submitted an invalid CSRF token</small>
+                        {% endif %}
+
+                        <div class="row">
+                            <div class="col-span-12 {{ 'error' if form.datapipeline.errors }}">
+                                {{form.datapipeline.label}} {{form.datapipeline()}}
+                                {% if form.datapipeline.errors %}
+                                    {% for error in form.datapipeline.errors %}<small>{{ error }}</small>{% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-panel-footer">
+                        <div class="row">
+                            <div class="col-span-12 ">
+                                <button class="left" type="submit">{% trans %}Start{% endtrans %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock page_content %}
