@@ -55,10 +55,3 @@ You can specify which account to use when uploading by adding the `--no_cookies`
 * `npm install`
 * `bower install`
 * `gulp or gulp build or gulp build --production`
-
-## Dev Server Database
-I periodically backup my local datastore to GCS. If you have project access then you can download it from 
-`/gff-uk/localdatastore`
-
-To use it, run `dev_appserver.py` with the flag `--datastore_path=/path/to/datastore.db`, 
-e.g. if you saved the datastore to the config folder: `--datastore_path=./config/datastore.db`
