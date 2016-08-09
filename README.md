@@ -1,24 +1,8 @@
-# GFF MyGuild
-Built using Project Koala and WebAppTools.
+# Koala Quick Start Project
+This is a really barebones example of a koala+jerboa project. It offers a user registration and login flow.
 
-# Close Awards Tasks
-- Publish results via pipeline, if applicable
-- Change config to show that the awards are closed
-
-
-
-# New Award Tasks
-- Close previous awards, if necessary
-- Clean open orders from system
-- Switch config for new entry
-- Update the dashboard download links
-- Update categories (Map CURRENT_AWARD_MAP ot the necessary dict/set)
-- Update logo links
-
-
-
-## Important Notes
-* The gffcompany module search has a field, `updated_timestamp`, which suffers from the [2038 problem](https://en.wikipedia.org/wiki/Year_2038_problem "2038 Problem Description").
+We will update this readme with more detailed instructions at some point in the future. This will include an explanation
+of the structure and where you would put new code etc.
 
 ## Setup
 In order to install pycrypto on Windows you will need to install the [Visual C++ Compiler for Python 2.7](https://www.microsoft.com/en-us/download/details.aspx?id=44266).
